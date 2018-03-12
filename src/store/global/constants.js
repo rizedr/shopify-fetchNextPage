@@ -1,2 +1,3 @@
-export const INIT =  'global/INIT';
-export const INIT_DONE = 'global/INIT_DONE';
+export const SET_COLLECTIONS =  'global/SET_COLLECTIONS';
+export const SET_COLLECTIONS_SUCCESS = 'global/SET_COLLECTIONS_SUCCESS';
+export const SET_COLLECTIONS_ERROR = 'global/SET_COLLECTIONS_ERROR';

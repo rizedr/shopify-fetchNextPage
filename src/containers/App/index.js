@@ -2,54 +2,90 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  init,
+  setCollections,
 } from '../../store/global/actions';
 import {
-  hasLoaded,
+  areCollectionsLoading,
+  getCollections,
 } from '../../store/global/selectors';
-import logo from './logo.svg';
+import {
+  Container,
+  Segment,
+  Header,
+  Message,
+  List,
+  Button,
+  Dimmer,
+  Loader,
+} from 'semantic-ui-react';
 
 class App extends Component {
   static propTypes = {
-    loaded: PropTypes.bool,
-    init: PropTypes.func,
+    collectionsLoading: PropTypes.bool,
+    collections: PropTypes.array,
+    setCollections: PropTypes.func,
   };
 
   componentDidMount() {
-    this.props.init();
+    this.props.setCollections();
   }
 
   render() {
-    const { loaded } = this.props;
+    const {
+      collectionsLoading,
+      collections,
+    } = this.props;
 
-    if (!loaded) {
+    if (collectionsLoading) {
       return (
-        <div>
-          Loading
-        </div>
+        <Container>
+          <Dimmer active>
+            <Loader />
+          </Dimmer>
+        </Container>
       );
     }
 
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <Container>
+        <Segment style={{ marginTop: '1rem' }} attached="top">
+          <Header as="h1">
+            Issue Example
+          </Header>
+        </Segment>
+        <Segment attached="bottom">
+          <Header>
+            Collections
+          </Header>
+          <Message>
+            The list of collections that comes from my shop.
+          </Message>
+          <div>
+            { collections.map(({ id, title }) => (
+              <Segment key={id} vertical>
+                <Header size="small">
+                  { title }
+                </Header>
+                <Button
+                  compact
+                  content="Load Products"
+                />
+              </Segment>
+            )) }
+          </div>
+        </Segment>
+      </Container>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  loaded: hasLoaded(state),
+  collectionsLoading: areCollectionsLoading(state),
+  collections: getCollections(state),
 });
 
 const mapDispatchToProps = {
-  init,
+  setCollections,
 };
 
 export default connect(

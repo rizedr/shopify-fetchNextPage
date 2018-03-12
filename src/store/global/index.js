@@ -1,21 +1,31 @@
 import * as types from './constants';
 
 const initialState = {
-  loaded: false,
+  error: null,
+  collectionsLoading: false,
+  collections: [],
 };
 
 export default function global(state = initialState, action) {
   switch (action.type) {
-    case types.INIT: {
+    case types.SET_COLLECTIONS: {
       return {
         ...state,
-        loaded: false,
+        collectionsLoading: true,
       };
     }
-    case types.INIT_DONE: {
+    case types.SET_COLLECTIONS_SUCCESS: {
       return {
         ...state,
-        loaded: true,
+        collectionsLoading: false,
+        collections: action.collections,
+      };
+    }
+    case types.SET_COLLECTIONS_ERROR: {
+      return {
+        ...state,
+        collectionsLoading: false,
+        error: action.error,
       };
     }
     default:
