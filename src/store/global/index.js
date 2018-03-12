@@ -7,6 +7,7 @@ const initialState = {
   selectedCollection: null,
   productsLoading: false,
   products: [],
+  nextProductsLoading: false,
 };
 
 export default function global(state = initialState, action) {
@@ -51,6 +52,22 @@ export default function global(state = initialState, action) {
         ...state,
         productsLoading: false,
         error: action.error,
+      };
+    }
+    case types.SET_PRODUCTS_NEXT_PAGE: {
+      return {
+        ...state,
+        nextProductsLoading: true,
+      };
+    }
+    case types.SET_PRODUCTS_NEXT_PAGE_SUCCESS: {
+      return {
+        ...state,
+        nextProductsLoading: false,
+        products: [
+          ...state.products,
+          ...action.nextProducts.model,
+        ],
       };
     }
     default:

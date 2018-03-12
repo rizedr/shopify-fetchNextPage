@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import {
   setCollections,
   setCollectionProduct,
+  setProductsNextPage,
 } from '../../store/global/actions';
 import {
   areCollectionsLoading,
@@ -11,11 +12,10 @@ import {
   getSelectedCollection,
   areProductsLoading,
   getProducts,
+  areNextProductsLoading,
 } from '../../store/global/selectors';
 import {
   Container,
-  Grid,
-  Card,
   Segment,
   Header,
   Message,
@@ -32,8 +32,10 @@ class App extends Component {
     selectedCollection: PropTypes.string,
     productsLoading: PropTypes.bool,
     products: PropTypes.array,
+    nextProductsLoading: PropTypes.bool,
     setCollections: PropTypes.func,
     setCollectionProduct: PropTypes.func,
+    setProductsNextPage: PropTypes.func,
   };
 
   componentDidMount() {
@@ -47,6 +49,7 @@ class App extends Component {
       selectedCollection,
       productsLoading,
       products,
+      nextProductsLoading,
     } = this.props;
 
     if (collectionsLoading) {
@@ -73,12 +76,15 @@ class App extends Component {
           <Header size="large">
             Collections
           </Header>
-          <Message>
+          <p>
             The list of collections that comes from my shop.
-          </Message>
+          </p>
           <div>
             { collections.map(({ id, title }) => (
-              <Segment key={id} vertical>
+              <Segment
+                key={id}
+                vertical
+              >
                 <Header size="small">
                   { title }
                 </Header>
@@ -104,26 +110,35 @@ class App extends Component {
             </Message>
           ) : (
             <div>
-              <div style={{ marginBottom: '1em' }}>
-                <Label detail="Selected Collection" content={selectedCollection} />
-              </div>
               { !productsLoading && products.length === 0 ? (
                 <Message>
                   No Products available in this collection.
                 </Message>
               ) : (
                 <div>
-                  <Grid columns={4}>
-                    { products.map(({ id, title, description }) => (
-                      <Grid.Column key={id}>
-                        <Card
-                          fluid
-                          header={title}
-                          description={description}
-                        />
-                      </Grid.Column>
+                  <div style={{ marginBottom: '1em' }}>
+                    <Label detail="Selected Collection" content={selectedCollection} />
+                  </div>
+                  <div>
+                    { products.map(({ id, title }, key) => (
+                      <Segment
+                        key={id}
+                        vertical
+                      >
+                        <Header>
+                          { title }
+                        </Header>
+                        Product no. {key + 1}
+                      </Segment>
                     )) }
-                  </Grid>s
+                  </div>
+                  <div style={{ marginTop: '1em' }}>
+                    <Button
+                      content="Load Next Page"
+                      loading={nextProductsLoading}
+                      onClick={this.props.setProductsNextPage}
+                    />
+                  </div>
                 </div>
               ) }
             </div>
@@ -140,11 +155,13 @@ const mapStateToProps = state => ({
   selectedCollection: getSelectedCollection(state),
   productsLoading: areProductsLoading(state),
   products: getProducts(state),
+  nextProductsLoading: areNextProductsLoading(state),
 });
 
 const mapDispatchToProps = {
   setCollections,
   setCollectionProduct,
+  setProductsNextPage,
 };
 
 export default connect(

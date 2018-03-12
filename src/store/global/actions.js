@@ -1,5 +1,8 @@
 import Client from 'shopify-buy';
 import * as types from './constants';
+import {
+  getProducts,
+} from './selectors';
 
 const client = Client.buildClient({
   domain: 'andraandreescu-dev.myshopify.com',
@@ -47,6 +50,24 @@ export function setCollectionProduct(collectionId, collectionTitle) {
           error: 'Error Fetching Products',
           type: types.SET_COLLECTIONS_ERROR,
         })
+      });
+  };
+}
+
+export function setProductsNextPage() {
+  return (dispatch, getState) => {
+    dispatch({
+      type: types.SET_PRODUCTS_NEXT_PAGE,
+    });
+    const state = getState();
+    const products = getProducts(state);
+
+    return client.fetchNextPage(products)
+      .then((nextProducts) => {
+        return dispatch({
+          nextProducts,
+          type: types.SET_PRODUCTS_NEXT_PAGE_SUCCESS,
+        });
       });
   };
 }
