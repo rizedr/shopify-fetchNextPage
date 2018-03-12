@@ -19,10 +19,12 @@ import {
   Segment,
   Header,
   Message,
+  List,
   Button,
   Label,
   Dimmer,
   Loader,
+  Divider,
 } from 'semantic-ui-react';
 
 class App extends Component {
@@ -71,6 +73,31 @@ class App extends Component {
           <Header as="h1">
             Issue Example
           </Header>
+          <Divider/>
+          <Header size="small">
+            Steps to produce the error:
+          </Header>
+          <List ordered>
+            <List.Item>
+              Load <b>All</b> collections.
+            </List.Item>
+            <List.Item>
+              Scroll all the way down and press <b>Load Next Page</b> button.
+            </List.Item>
+            <List.Item>
+              Loading the next page first and second time works, afterwards it errors - check your browser console to see it.
+            </List.Item>
+          </List>
+          <Message warning>
+            <b>Expected</b> is for the next page of products to load, hence the collection has <b>98 products</b> in it.
+          </Message>
+          <Divider/>
+          <Header size="small">
+            Other Notes
+          </Header>
+          <p>
+            If you click on the other collections that have less than 20 products, spamming the <b>Load Next Page</b> button won't produce any error.
+          </p>
         </Segment>
         <Segment attached>
           <Header size="large">
@@ -100,6 +127,7 @@ class App extends Component {
         <Segment
           attached="bottom"
           loading={productsLoading}
+          style={{ marginBottom: '1rem' }}
         >
           <Header size="large">
             Products
@@ -117,7 +145,10 @@ class App extends Component {
               ) : (
                 <div>
                   <div style={{ marginBottom: '1em' }}>
-                    <Label detail="Selected Collection" content={selectedCollection} />
+                    <Label
+                      content="Selected Collection"
+                      detail={selectedCollection}
+                    />
                   </div>
                   <div>
                     { products.map(({ id, title }, key) => (
